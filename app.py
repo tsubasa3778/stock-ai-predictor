@@ -157,28 +157,25 @@ if page == "ニュース感情分析":
 # LSTM株価予測 ページ
 # ====================
 elif page == "LSTM株価予測":
-    st.header("📊 株価予測結果")
-    company = st.selectbox("企業を選択してください", companies)
-    future_path = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future10.png")
-
-    if os.path.exists(future_path):
-        st.image(future_path, caption=f"{company} - 10営業日後予測", use_container_width=True)
-    else:
-        st.warning(f"{company} の予測画像が見つかりません。")
-elif page == "LSTM株価予測":
-    st.header("📈 株価未来予測グラフ（5, 10, 30営業日後）")
+    st.header("📈 株価未来予測グラフ（5, 10, 30営業日後 & RMSEテスト結果）")
     company = st.selectbox("企業を選択してください", companies)
 
     for future in [5, 10, 30]:
-        future_path = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future{future}_future.png")
-        st.subheader(f"{company} - {future}営業日後の未来予測")
-
-        if os.path.exists(future_path):
-            st.image(future_path, caption=f"{company} - {future}営業日後 未来予測", use_container_width=True)
+        # テスト結果 (RMSE表示)
+        st.subheader(f"{company} - テスト結果 ({future}営業日後)")
+        test_img = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future{future}.png")
+        if os.path.exists(test_img):
+            st.image(test_img, caption="テスト結果 (RMSE含む)", use_container_width=True)
         else:
-            st.warning(f"{company} の {future}日後 未来予測画像が見つかりません。")
+            st.warning(f"{company} のテスト結果画像 ({future}営業日後) が見つかりません。")
 
-
+        # 未来予測
+        st.subheader(f"{company} - 未来予測 ({future}営業日後)")
+        future_img = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future{future}_future.png")
+        if os.path.exists(future_img):
+            st.image(future_img, caption="未来予測", use_container_width=True)
+        else:
+            st.warning(f"{company} の未来予測画像 ({future}営業日後) が見つかりません。")
 
 # ====================
 # コード閲覧 ページ
@@ -233,6 +230,10 @@ def start_tunnel():
         print(result.stdout)
     except Exception as e:
         print("❌ Tunnel 起動エラー:", e)
+
+# --- 別スレッドでトンネル起動（Streamlitと並行実行） ---
+threading.Thread(target=start_tunnel, daemon=True).start()
+
 
 # --- 別スレッドでトンネル起動（Streamlitと並行実行） ---
 threading.Thread(target=start_tunnel, daemon=True).start()
