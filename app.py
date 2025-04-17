@@ -165,6 +165,19 @@ elif page == "LSTM株価予測":
         st.image(future_path, caption=f"{company} - 10営業日後予測", use_container_width=True)
     else:
         st.warning(f"{company} の予測画像が見つかりません。")
+elif page == "LSTM株価予測":
+    st.header("📈 株価未来予測グラフ（5, 10, 30営業日後）")
+    company = st.selectbox("企業を選択してください", companies)
+
+    for future in [5, 10, 30]:
+        future_path = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future{future}_future.png")
+        st.subheader(f"{company} - {future}営業日後の未来予測")
+
+        if os.path.exists(future_path):
+            st.image(future_path, caption=f"{company} - {future}営業日後 未来予測", use_container_width=True)
+        else:
+            st.warning(f"{company} の {future}日後 未来予測画像が見つかりません。")
+
 
 
 # ====================
