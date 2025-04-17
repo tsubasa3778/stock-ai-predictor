@@ -158,7 +158,14 @@ if page == "ニュース感情分析":
 # ====================
 elif page == "LSTM株価予測":
     st.header("📊 株価予測結果")
-    # ...（既存コード省略）
+    company = st.selectbox("企業を選択してください", companies)
+    future_path = os.path.join(DATA_DIR, "lstm_predictions", f"{company}_future10.png")
+
+    if os.path.exists(future_path):
+        st.image(future_path, caption=f"{company} - 10営業日後予測", use_container_width=True)
+    else:
+        st.warning(f"{company} の予測画像が見つかりません。")
+
 
 # ====================
 # コード閲覧 ページ
