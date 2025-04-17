@@ -1,0 +1,11 @@
+streamlit
+pandas
+matplotlib
+altair
+Pillow
+yfinance
+keras
+transformers
+torch
+scikit-learn
+numpy
